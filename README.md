@@ -196,9 +196,12 @@ flowchart TD
 
 본 애플리케이션은 **Progressive Web App(PWA)** 기술이 적용되어 있어, 모바일 브라우저 주소창 없이 **스마트폰 홈 화면에 설치하여 실제 앱처럼 풀스크린**으로 사용할 수 있습니다.
 
+> 🔑 **모바일 앱 실행 및 접속 비밀번호:** `1234`  
+> 홈 화면에 생성된 전용 앱 아이콘을 터치하여 실행한 후, 보안 잠금 화면에서 **`1234`**를 입력하시면 즉시 정밀 분석 기능이 활성화됩니다.
+
 | <img src="./static/icons/icon-192.png" width="80" /><br />**iOS (아이폰)** | <img src="./static/icons/icon-192.png" width="80" /><br />**Android (갤럭시)** |
 | :--- | :--- |
-| 1. Safari로 [서비스 접속](https://data-insight-builder-one.vercel.app/)<br />2. 하단 **[공유 버튼 (네모+화살표)]** 클릭<br />3. **[홈 화면에 추가]** 클릭 | 1. Chrome/삼성인터넷으로 [접속](https://data-insight-builder-one.vercel.app/)<br />2. 상단 메뉴(점 3개) 또는 하단 **[앱 설치]** 팝업 클릭<br />3. **[설치]** 확인 |
+| 1. Safari 브라우저로 [라이브 서비스 접속](https://data-insight-builder-one.vercel.app/)<br />2. 하단 중앙 **[공유 버튼 (네모+화살표)]** 클릭<br />3. **[홈 화면에 추가]** 클릭 ➔ 바탕화면에 전용 앱 생성<br />4. 앱 실행 후 비밀번호 **`1234`** 입력하여 시작 | 1. Chrome 또는 삼성인터넷으로 [라이브 서비스 접속](https://data-insight-builder-one.vercel.app/)<br />2. 상단 메뉴(점 3개) 또는 하단 **[앱 설치]** 팝업 클릭<br />3. **[설치]** 확인 ➔ 바탕화면에 전용 앱 생성<br />4. 앱 실행 후 비밀번호 **`1234`** 입력하여 시작 |
 
 <br />
 
