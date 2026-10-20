@@ -849,3 +849,173 @@ body {
     text-align: left;
     margin-top: 2px;
 }
+
+/* ==========================================================================
+   Mobile Responsive & PWA Touch Optimizations
+   ========================================================================== */
+
+/* 아이폰 Safe Area & 기본 모바일 여백 */
+body {
+    padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+}
+
+@media (max-width: 768px) {
+    /* 헤더 컴팩트 스택 */
+    .app-header {
+        padding: calc(16px + env(safe-area-inset-top, 0px)) 16px 16px 16px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .app-header h1 {
+        font-size: 1.25rem;
+    }
+
+    .app-header .subtitle {
+        font-size: 0.8rem;
+    }
+
+    .server-status-bar {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: space-between;
+    }
+
+    .notice-banner {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        text-align: left;
+    }
+
+    /* 컨테이너 및 카드 */
+    .container {
+        padding: 0 10px;
+        margin: 14px auto;
+        gap: 16px;
+    }
+
+    .card {
+        padding: 18px 14px;
+        border-radius: var(--radius-md);
+    }
+
+    .card h2 {
+        font-size: 1.15rem;
+    }
+
+    .section-desc {
+        font-size: 0.84rem;
+        margin-bottom: 14px;
+    }
+
+    /* 메트릭 그리드 (2열) */
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .metric-card {
+        padding: 10px 12px;
+    }
+
+    .metric-label {
+        font-size: 0.72rem;
+    }
+
+    .metric-value {
+        font-size: 1.05rem;
+    }
+
+    /* 자연어 검색창 & Q&A 모바일 세로 배치 */
+    .nl-form, .qa-form {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .nl-input, .qa-input {
+        width: 100%;
+        font-size: 16px !important; /* iOS 자동 줌인(Zoom) 방지 필수 규칙 */
+        padding: 12px 14px;
+    }
+
+    .nl-form .btn-primary, .qa-form .btn {
+        width: 100%;
+        height: 44px; /* 모바일 터치 권장 크기 */
+        font-size: 0.95rem;
+        justify-content: center;
+    }
+
+    /* 추천 질문 칩 터치 영역 최적화 */
+    .suggested-questions-box {
+        padding: 10px 12px;
+    }
+
+    .question-chip {
+        padding: 8px 14px;
+        font-size: 0.82rem;
+        line-height: 1.4;
+    }
+
+    .nl-chip {
+        padding: 7px 12px;
+        font-size: 0.78rem;
+    }
+
+    /* 차트 컨테이너 모바일 높이 맞춤 */
+    .chart-wrapper {
+        min-height: 280px;
+        max-height: 360px;
+        padding: 8px;
+        margin: 16px 0;
+    }
+
+    /* 표(테이블) 모바일 터치 가로 스크롤 강화 */
+    .table-wrapper {
+        margin: 10px -14px;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .preview-table th, .preview-table td {
+        padding: 8px 10px;
+        font-size: 0.78rem;
+        white-space: nowrap;
+    }
+
+    /* 제안 카드 1열 배치 */
+    .suggestions-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    /* 말풍선 너비 확대 */
+    .chat-bubble {
+        max-width: 95%;
+        padding: 10px 14px;
+        font-size: 0.88rem;
+    }
+
+    /* 마크다운 본문 모바일 패딩 */
+    .markdown-body {
+        padding: 16px;
+        font-size: 0.9rem;
+    }
+
+    .markdown-body h2 {
+        font-size: 1.15rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+    .auth-modal-card {
+        padding: 24px 18px;
+    }
+}
