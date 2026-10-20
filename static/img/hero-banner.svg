@@ -1,0 +1,200 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" width="100%" height="100%">
+  <defs>
+    <!-- 배경 그라데이션 -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090d16" />
+      <stop offset="50%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e1b4b" />
+    </linearGradient>
+
+    <!-- 텍스트 그라데이션 -->
+    <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#2dd4bf" />
+      <stop offset="100%" stop-color="#a78bfa" />
+    </linearGradient>
+
+    <!-- 차트 막대 그라데이션 -->
+    <linearGradient id="bar1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <linearGradient id="bar2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2dd4bf" />
+      <stop offset="100%" stop-color="#0d9488" />
+    </linearGradient>
+    <linearGradient id="bar3" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fb7185" />
+      <stop offset="100%" stop-color="#e11d48" />
+    </linearGradient>
+    <linearGradient id="trendGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.8" />
+      <stop offset="50%" stop-color="#34d399" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#fbbf24" stop-opacity="1" />
+    </linearGradient>
+
+    <!-- 카드 글로우 필터 -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <!-- 배경 캔버스 -->
+  <rect width="1200" height="480" rx="16" fill="url(#bgGrad)" />
+
+  <!-- 배경 데이터 그리드 라인 (은은한 통계 모눈) -->
+  <g opacity="0.08" stroke="#ffffff" stroke-width="1">
+    <line x1="0" y1="80" x2="1200" y2="80" />
+    <line x1="0" y1="160" x2="1200" y2="160" />
+    <line x1="0" y1="240" x2="1200" y2="240" />
+    <line x1="0" y1="320" x2="1200" y2="320" />
+    <line x1="0" y1="400" x2="1200" y2="400" />
+    <line x1="150" y1="0" x2="150" y2="480" />
+    <line x1="300" y1="0" x2="300" y2="480" />
+    <line x1="450" y1="0" x2="450" y2="480" />
+    <line x1="600" y1="0" x2="600" y2="480" />
+    <line x1="750" y1="0" x2="750" y2="480" />
+    <line x1="900" y1="0" x2="900" y2="480" />
+    <line x1="1050" y1="0" x2="1050" y2="480" />
+  </g>
+
+  <!-- 배경 글로우 오브 (빛나는 구름) -->
+  <circle cx="200" cy="120" r="140" fill="#38bdf8" opacity="0.12" filter="url(#glow)" />
+  <circle cx="950" cy="240" r="180" fill="#6366f1" opacity="0.18" filter="url(#glow)" />
+  <circle cx="700" cy="380" r="120" fill="#0d9488" opacity="0.12" filter="url(#glow)" />
+
+  <!-- ================= 좌측: 텍스트 및 브랜딩 ================= -->
+  <g transform="translate(80, 85)">
+    <!-- 뱃지: 상단 태그 -->
+    <rect x="0" y="0" width="310" height="34" rx="17" fill="#1e293b" stroke="#334155" stroke-width="1.5" />
+    <circle cx="16" cy="17" r="5" fill="#10b981" />
+    <text x="30" y="22" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" fill="#94a3b8">
+      PANDAS ENGINE  ×  GEMINI 3.5 AI
+    </text>
+
+    <!-- 메인 타이틀 -->
+    <text x="0" y="85" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="46" font-weight="800" fill="#ffffff" letter-spacing="-1">
+      AI Data Insight Builder
+    </text>
+    <text x="0" y="132" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="24" font-weight="700" fill="url(#titleGrad)">
+      수치 왜곡 없는 공식 통계 정밀 진단 시스템
+    </text>
+
+    <!-- 서브 카피 -->
+    <text x="0" y="178" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" fill="#94a3b8" line-height="24">
+      <tspan x="0" dy="0">생성형 AI의 통계 할루시네이션(수치 날조)을 원천 차단하고,</tspan>
+      <tspan x="0" dy="24">엄격한 Pandas 연산값과 7단계 신뢰 원칙으로 작성되는 데이터 분석 플랫폼</tspan>
+    </text>
+
+    <!-- 하단 피처 뱃지들 -->
+    <g transform="translate(0, 245)">
+      <!-- 뱃지 1: Live Demo -->
+      <g>
+        <rect x="0" y="0" width="136" height="36" rx="8" fill="#2563eb" />
+        <text x="18" y="23" font-family="sans-serif" font-size="13" font-weight="700" fill="#ffffff">🌐 Live Service</text>
+      </g>
+      <!-- 뱃지 2: PWA -->
+      <g transform="translate(148, 0)">
+        <rect x="0" y="0" width="134" height="36" rx="8" fill="#1e293b" stroke="#0d9488" stroke-width="1.5" />
+        <text x="18" y="23" font-family="sans-serif" font-size="13" font-weight="700" fill="#2dd4bf">📱 Mobile PWA</text>
+      </g>
+      <!-- 뱃지 3: Lock -->
+      <g transform="translate(294, 0)">
+        <rect x="0" y="0" width="136" height="36" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1.5" />
+        <text x="18" y="23" font-family="sans-serif" font-size="13" font-weight="700" fill="#cbd5e1">🔒 Password Gate</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ================= 우측: 3D 통계 그래픽 & 스마트폰 목업 ================= -->
+  <g transform="translate(730, 45)" filter="url(#softShadow)">
+    <!-- 대시보드 메인 카드 -->
+    <rect x="0" y="30" width="390" height="340" rx="20" fill="#0f172a" stroke="#334155" stroke-width="2" />
+    <rect x="0" y="30" width="390" height="50" rx="20" fill="#1e293b" />
+    <line x1="0" y1="80" x2="390" y2="80" stroke="#334155" stroke-width="1.5" />
+    
+    <!-- 창 제어 점 3개 -->
+    <circle cx="28" cy="55" r="6" fill="#ef4444" />
+    <circle cx="48" cy="55" r="6" fill="#f59e0b" />
+    <circle cx="68" cy="55" r="6" fill="#10b981" />
+    <text x="96" y="60" font-family="sans-serif" font-size="12" font-weight="600" fill="#94a3b8">stat-dashboard.live · 2024</text>
+
+    <!-- 차트 내부 그리드 -->
+    <g transform="translate(35, 110)">
+      <line x1="0" y1="0" x2="320" y2="0" stroke="#1e293b" stroke-width="1" />
+      <line x1="0" y1="50" x2="320" y2="50" stroke="#1e293b" stroke-width="1" />
+      <line x1="0" y1="100" x2="320" y2="100" stroke="#1e293b" stroke-width="1" />
+      <line x1="0" y1="150" x2="320" y2="150" stroke="#334155" stroke-width="1.5" />
+
+      <!-- 막대 1 -->
+      <rect x="30" y="35" width="36" height="115" rx="6" fill="url(#bar1)" />
+      <!-- 막대 2 -->
+      <rect x="90" y="15" width="36" height="135" rx="6" fill="url(#bar2)" />
+      <!-- 막대 3 (강조 막대: 대한민국 Korea 13위) -->
+      <rect x="150" y="45" width="36" height="105" rx="6" fill="url(#bar3)" filter="url(#glow)" />
+      <text x="168" y="35" font-family="sans-serif" font-size="11" font-weight="700" fill="#fb7185" text-anchor="middle">★ 한국</text>
+      <!-- 막대 4 -->
+      <rect x="210" y="65" width="36" height="85" rx="6" fill="url(#bar1)" opacity="0.8" />
+      <!-- 막대 5 -->
+      <rect x="270" y="90" width="36" height="60" rx="6" fill="url(#bar1)" opacity="0.6" />
+
+      <!-- 시계열 추세선 (곡선) -->
+      <path d="M 48 110 Q 108 50, 168 75 T 288 30" fill="none" stroke="url(#trendGrad)" stroke-width="3" stroke-linecap="round" />
+      <!-- 데이터 포인트 원 -->
+      <circle cx="48" cy="110" r="5" fill="#38bdf8" stroke="#ffffff" stroke-width="2" />
+      <circle cx="108" cy="50" r="5" fill="#2dd4bf" stroke="#ffffff" stroke-width="2" />
+      <circle cx="168" cy="75" r="6" fill="#f43f5e" stroke="#ffffff" stroke-width="2" />
+      <circle cx="228" cy="48" r="5" fill="#a78bfa" stroke="#ffffff" stroke-width="2" />
+      <circle cx="288" cy="30" r="5" fill="#fbbf24" stroke="#ffffff" stroke-width="2" />
+    </g>
+
+    <!-- 하단 통계 수치 인디케이터 배너 -->
+    <g transform="translate(25, 290)">
+      <rect x="0" y="0" width="340" height="56" rx="12" fill="#1e293b" stroke="#334155" stroke-width="1" />
+      <text x="20" y="24" font-family="sans-serif" font-size="11" font-weight="600" fill="#94a3b8">KOREA (13위)</text>
+      <text x="20" y="45" font-family="sans-serif" font-size="17" font-weight="800" fill="#38bdf8">97.90%</text>
+
+      <text x="140" y="24" font-family="sans-serif" font-size="11" font-weight="600" fill="#94a3b8">제외 집계 행</text>
+      <text x="140" y="45" font-family="sans-serif" font-size="17" font-weight="800" fill="#fbbf24">29건 필터링</text>
+
+      <text x="250" y="24" font-family="sans-serif" font-size="11" font-weight="600" fill="#94a3b8">응답 속도</text>
+      <text x="250" y="45" font-family="sans-serif" font-size="17" font-weight="800" fill="#34d399">0.7초</text>
+    </g>
+
+    <!-- 우측 오버랩: 스마트폰 PWA 프레임 -->
+    <g transform="translate(290, 140)" filter="url(#softShadow)">
+      <rect x="0" y="0" width="105" height="195" rx="18" fill="#020617" stroke="#38bdf8" stroke-width="2.5" />
+      <!-- 스피커 노치 -->
+      <rect x="36" y="8" width="33" height="4" rx="2" fill="#334155" />
+      <!-- 폰 화면 -->
+      <rect x="6" y="18" width="93" height="162" rx="12" fill="#0f172a" />
+      
+      <!-- 폰 내부 UI -->
+      <rect x="14" y="28" width="77" height="16" rx="4" fill="#1e293b" />
+      <text x="20" y="39" font-family="sans-serif" font-size="7" font-weight="700" fill="#38bdf8">📊 DataInsight</text>
+
+      <rect x="14" y="50" width="77" height="60" rx="6" fill="#1e293b" stroke="#334155" stroke-width="0.8" />
+      <!-- 미니 막대그래프 -->
+      <rect x="22" y="80" width="8" height="24" rx="2" fill="#38bdf8" />
+      <rect x="34" y="70" width="8" height="34" rx="2" fill="#2dd4bf" />
+      <rect x="46" y="65" width="8" height="39" rx="2" fill="#f43f5e" />
+      <rect x="58" y="75" width="8" height="29" rx="2" fill="#38bdf8" />
+      <rect x="70" y="85" width="8" height="19" rx="2" fill="#38bdf8" />
+
+      <!-- 미니 질문 버튼 -->
+      <rect x="14" y="118" width="77" height="24" rx="6" fill="#0d9488" />
+      <text x="52" y="133" font-family="sans-serif" font-size="7.5" font-weight="700" fill="#ffffff" text-anchor="middle">💡 AI 질문하기</text>
+
+      <!-- 폰 홈 바 -->
+      <rect x="38" y="184" width="29" height="3" rx="1.5" fill="#64748b" />
+    </g>
+
+    <!-- 반짝이는 AI 스타 스파클 -->
+    <path d="M -15 80 Q -15 95 -30 95 Q -15 95 -15 110 Q -15 95 0 95 Q -15 95 -15 80 Z" fill="#fbbf24" filter="url(#glow)" />
+    <path d="M 370 20 Q 370 30 360 30 Q 370 30 370 40 Q 370 30 380 30 Q 370 30 370 20 Z" fill="#38bdf8" filter="url(#glow)" />
+  </g>
+</svg>

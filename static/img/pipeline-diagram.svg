@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="activeBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#2dd4bf" />
+    </linearGradient>
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- 배경 -->
+  <rect width="1100" height="240" rx="16" fill="#090d16" />
+
+  <!-- 연결선 화살표들 -->
+  <g stroke="#334155" stroke-width="2" stroke-dasharray="6,4">
+    <line x1="220" y1="120" x2="260" y2="120" />
+    <line x1="460" y1="120" x2="500" y2="120" />
+    <line x1="700" y1="120" x2="740" y2="120" />
+    <line x1="940" y1="120" x2="980" y2="120" />
+  </g>
+
+  <!-- 화살표 머리 -->
+  <polygon points="255,116 265,120 255,124" fill="#38bdf8" />
+  <polygon points="495,116 505,120 495,124" fill="#2dd4bf" />
+  <polygon points="735,116 745,120 735,124" fill="#a78bfa" />
+  <polygon points="975,116 985,120 975,124" fill="#34d399" />
+
+  <!-- ================= 1단계: CSV 업로드 ================= -->
+  <g transform="translate(30, 35)" filter="url(#cardShadow)">
+    <rect width="190" height="170" rx="12" fill="url(#cardGrad)" stroke="#334155" stroke-width="1.5" />
+    <circle cx="95" cy="48" r="22" fill="#1e3a8a" />
+    <text x="95" y="55" font-size="20" text-anchor="middle">📁</text>
+    <text x="95" y="94" font-family="sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">1. 원천 통계 CSV</text>
+    <text x="95" y="118" font-family="sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">World Bank / 공공데이터</text>
+    <text x="95" y="136" font-family="sans-serif" font-size="11" fill="#64748b" text-anchor="middle">UTF-8 / 상단 메타 헤더</text>
+    <rect x="25" y="148" width="140" height="18" rx="9" fill="#0f172a" stroke="#1e293b" />
+    <text x="95" y="161" font-family="sans-serif" font-size="9.5" font-weight="600" fill="#38bdf8" text-anchor="middle">인코딩 자동 감지</text>
+  </g>
+
+  <!-- ================= 2단계: 13대 항목 정밀 진단 ================= -->
+  <g transform="translate(270, 35)" filter="url(#cardShadow)">
+    <rect width="190" height="170" rx="12" fill="url(#cardGrad)" stroke="#0284c7" stroke-width="1.8" />
+    <circle cx="95" cy="48" r="22" fill="#0369a1" />
+    <text x="95" y="55" font-size="20" text-anchor="middle">🔍</text>
+    <text x="95" y="94" font-family="sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">2. Pandas 정밀 진단</text>
+    <text x="95" y="118" font-family="sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">13개 품질 항목 전수 조사</text>
+    <text x="95" y="136" font-family="sans-serif" font-size="11" fill="#fbbf24" text-anchor="middle">⚠️ 29개 집계행 자동 감지</text>
+    <rect x="25" y="148" width="140" height="18" rx="9" fill="#0f172a" stroke="#0284c7" />
+    <text x="95" y="161" font-family="sans-serif" font-size="9.5" font-weight="600" fill="#2dd4bf" text-anchor="middle">권장 기준연도 2024 산출</text>
+  </g>
+
+  <!-- ================= 3단계: AI 라우터 & 안전망 ================= -->
+  <g transform="translate(510, 35)" filter="url(#cardShadow)">
+    <rect width="190" height="170" rx="12" fill="url(#cardGrad)" stroke="#0d9488" stroke-width="1.8" />
+    <circle cx="95" cy="48" r="22" fill="#0f766e" />
+    <text x="95" y="55" font-size="20" text-anchor="middle">🧠</text>
+    <text x="95" y="94" font-family="sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">3. AI 라우터 엔진</text>
+    <text x="95" y="118" font-family="sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">Gemini 3.5 Flash Lite</text>
+    <text x="95" y="136" font-family="sans-serif" font-size="11" fill="#64748b" text-anchor="middle">자연어 의도 ➔ 도구 매핑</text>
+    <rect x="25" y="148" width="140" height="18" rx="9" fill="#0f172a" stroke="#0d9488" />
+    <text x="95" y="161" font-family="sans-serif" font-size="9.5" font-weight="600" fill="#34d399" text-anchor="middle">고가용성 규칙 안전망 내장</text>
+  </g>
+
+  <!-- ================= 4단계: Pandas 100% 수치 계산 ================= -->
+  <g transform="translate(750, 35)" filter="url(#cardShadow)">
+    <rect width="190" height="170" rx="12" fill="url(#cardGrad)" stroke="#7c3aed" stroke-width="1.8" />
+    <circle cx="95" cy="48" r="22" fill="#5b21b6" />
+    <text x="95" y="55" font-size="20" text-anchor="middle">⚙️</text>
+    <text x="95" y="94" font-family="sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">4. 순수 Pandas 연산</text>
+    <text x="95" y="118" font-family="sans-serif" font-size="11" fill="#38bdf8" text-anchor="middle">★ 할루시네이션 원천 차단</text>
+    <text x="95" y="136" font-family="sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">12대 통계 도구 엄격 계산</text>
+    <rect x="25" y="148" width="140" height="18" rx="9" fill="#0f172a" stroke="#7c3aed" />
+    <text x="95" y="161" font-family="sans-serif" font-size="9.5" font-weight="600" fill="#c084fc" text-anchor="middle">한국 13위 백그라운드 추적</text>
+  </g>
+
+  <!-- ================= 5단계: 시각화 & Mode B 보고서 ================= -->
+  <g transform="translate(990, 35)" filter="url(#cardShadow)">
+    <rect width="80" height="170" rx="12" fill="url(#cardGrad)" stroke="#10b981" stroke-width="1.8" />
+    <circle cx="40" cy="48" r="20" fill="#047857" />
+    <text x="40" y="55" font-size="18" text-anchor="middle">📊</text>
+    <text x="40" y="92" font-family="sans-serif" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">5. 최종 결과</text>
+    <text x="40" y="116" font-family="sans-serif" font-size="9.5" fill="#34d399" text-anchor="middle">Chart.js</text>
+    <text x="40" y="134" font-family="sans-serif" font-size="9.5" fill="#38bdf8" text-anchor="middle">Mode B</text>
+    <text x="40" y="152" font-family="sans-serif" font-size="9.5" fill="#fb7185" text-anchor="middle">PWA 모바일</text>
+  </g>
+</svg>
