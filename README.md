@@ -19,7 +19,24 @@
 
 **[ 🌐 라이브 서비스 체험하기 ](https://data-insight-builder-one.vercel.app/)** &nbsp;•&nbsp; **[ 📱 PWA 앱 다운로드 ](#-모바일-pwa-앱-설치-가이드)** &nbsp;•&nbsp; **[ 🔬 12대 통계 엔진 ](#-12대-정밀-통계-분석-도구-카탈로그)**
 
-> 🔒 **접속 비밀번호:** `1234` *(외부 무단 사용 방지용 Password Gate 적용)*
+<br />
+
+<!-- 눈에 띄는 비밀번호 안내 배너 -->
+<div align="center">
+  <table style="border: 2px solid #3b82f6; background-color: #eff6ff; border-radius: 12px; margin: 10px 0;">
+    <tr>
+      <td align="center" style="padding: 14px 28px;">
+        <span style="font-size: 1.2rem; font-weight: 800; color: #1e3a8a;">
+          🔑 웹 접속 비밀번호: <mark style="background: #1e3a8a; color: #ffffff; padding: 4px 12px; border-radius: 6px; font-weight: 800; font-size: 1.25rem;">1234</mark>
+        </span>
+        <br />
+        <span style="font-size: 0.88rem; color: #475569; display: inline-block; margin-top: 4px;">
+          외부 무단 접근 및 Gemini API 과금 방지를 위한 Password Gate가 적용되어 있습니다. 접속 후 <b>1234</b>를 입력해 주세요.
+        </span>
+      </td>
+    </tr>
+  </table>
+</div>
 
 </div>
 
@@ -63,6 +80,44 @@
     </td>
   </tr>
 </table>
+
+<br />
+
+---
+
+## 🎨 맞춤형 데이터 분석 및 시각화 (자연어 ➔ 즉시 차트 & 표 생성)
+
+사용자가 복잡한 X축, Y축, 집계 함수를 일일이 지정할 필요가 없습니다. **일상적인 자연어로 원하는 분석을 입력하면, AI 라우터가 의도를 해석하여 12대 통계 도구 중 최적의 도구와 파라미터를 자동 매핑하고 Pandas가 0.7초 만에 차트와 표를 동시에 생성**합니다.
+
+```
+[사용자 자연어 입력]
+"2024 인터넷 상위 10개국이랑 한국 비교하면서 표로도 만들어줘"
+        │
+        ▼
+[Gemini 3.5 지능형 라우터] ──(503 지연 시 규칙 안전망 자동 가동)──┐
+  • 선택 도구 : top_bottom_n                                      │
+  • 기준 연도 : 2024 (권장 기준연도 자동 적용)                      │
+  • 비교 대상 : include_items: ["Korea, Rep."]                     ▼
+        │                                                [Pandas 초고속 연산]
+        ▼                                                • 상위 10개국 순위 추출
+[인터랙티브 시각화 & 표 생성]                              • 한국 13위 (97.90%) 역추적
+  • Chart.js : 상위 10개국 막대 + 붉은색 강조 막대(★ Korea 13위)
+  • Table    : 전체 순위 표 + 노란색 하이라이트 비교 행(비교 대상 전체 13위)
+  • Summary  : "2024년 기준 1위는 UAE(100.00)이며, 비교 대상인 Korea는 전체 13위(97.90)입니다."
+```
+
+### 💡 대표적인 맞춤형 분석 명령어 예시
+
+| 사용 목적 | 자연어 프롬프트 예시 | 자동 매핑 도구 & 결과 |
+| :--- | :--- | :--- |
+| **특정 국가 비교 순위** | *"2024 인터넷 상위 10개국이랑 한국 비교하면서 표로도 만들어줘"* | `top_bottom_n` ➔ 상위 10개국 + **13위 한국 붉은색 막대 & 노란색 표 하이라이트** |
+| **구간별 빈도 분포** | *"2024년 인터넷보급률 히스토그램 그려줘"* | `distribution` ➔ 수치 구간별 국가 수 빈도수 히스토그램 막대 차트 |
+| **장기 시계열 추이** | *"한국과 주요 국가들의 연도별 시계열 추이선 보여줘"* | `trend_line` ➔ 다중 국가의 연도별 꺾은선 추세선 차트 |
+| **전체 집단 vs 내 위치** | *"우리나라 인터넷 보급률은 전 세계 평균과 비교해서 어때?"* | `compare_one_vs_all` ➔ 개별 국가 vs 전체 평균/중앙값 비교 차트 |
+| **성장률 및 변화량** | *"2015년부터 2024년까지 가장 인터넷이 많이 증가한 나라"* | `change_rate` ➔ 절대 증가량 및 상대 성장률(%) 분석 차트 |
+
+> 🛡️ **외부 AI 트래픽 과부하(503) 대비 고가용성 규칙 안전망 (Fallback Rule Engine)**  
+> 외부 Gemini API 서버가 일시적인 지연(503 Spike)을 겪더라도, 백엔드에 내장된 정규표현식 규칙 엔진(`fallback_rule_mapper`)이 즉시 가동되어 사용자는 **대기시간이나 에러 없이 100% 정상적으로 그래프를 도출**받을 수 있습니다.
 
 <br />
 
