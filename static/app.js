@@ -7,12 +7,91 @@
 let currentChartInstance = null;
 let selectedFile = null;
 
+// Vercel Serverless 무중단 데이터 복원용 캐시
+const SERVERLESS_DATA_CACHE = {
+    csv_data: null,
+    filename: null,
+    encoding: null,
+    skipped_rows: 0
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     console.log("[PAGE] 페이지 로드 완료");
+    initAuth();
     initHealthCheck();
     initFileUpload();
     initEventHandlers();
 });
+
+/* -------------------------------------------------------------
+   -1. 비밀번호 인증 및 보안 잠금 (/api/auth)
+------------------------------------------------------------- */
+async function initAuth() {
+    const authModal = document.getElementById("authModalOverlay");
+    const authForm = document.getElementById("authForm");
+    const authInput = document.getElementById("authPasswordInput");
+    const authErrorMsg = document.getElementById("authErrorMsg");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    try {
+        const res = await fetch("/api/auth/status");
+        const data = await res.json();
+        
+        if (data.required && !data.authenticated) {
+            authModal.classList.remove("hidden");
+            authInput.focus();
+        } else {
+            authModal.classList.add("hidden");
+            if (data.required) {
+                logoutBtn.classList.remove("hidden");
+            }
+        }
+    } catch (err) {
+        console.error("[AUTH] 인증 상태 확인 실패:", err);
+    }
+
+    authForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const pwd = authInput.value.trim();
+        if (!pwd) return;
+
+        try {
+            const res = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password: pwd })
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                authModal.classList.add("hidden");
+                authErrorMsg.classList.add("hidden");
+                authInput.value = "";
+                logoutBtn.classList.remove("hidden");
+            } else {
+                authErrorMsg.textContent = data.error || "비밀번호가 올바르지 않습니다.";
+                authErrorMsg.classList.remove("hidden");
+                authInput.select();
+            }
+        } catch (err) {
+            authErrorMsg.textContent = "로그인 중 네트워크 오류가 발생했습니다.";
+            authErrorMsg.classList.remove("hidden");
+        }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+        if (!confirm("앱을 잠그고 로그아웃하시겠습니까?")) return;
+        try {
+            await fetch("/api/auth/logout", { method: "POST" });
+            authModal.classList.remove("hidden");
+            logoutBtn.classList.add("hidden");
+            authInput.value = "";
+            authInput.focus();
+        } catch (err) {
+            console.error("[AUTH] 로그아웃 실패:", err);
+        }
+    });
+}
 
 /* -------------------------------------------------------------
    0. 서버 상태 점검 (/health)
@@ -195,6 +274,15 @@ async function requestInspect(file) {
         const diag = data.diagnostics || {};
         console.log(`[INSPECT] 진단 응답 수신: 행 수=${diag.rows}, 열 수=${diag.columns}, 경고 수=${diag.warnings?.length || 0}`);
 
+        // Vercel Serverless 무중단 복원용 캐시 업데이트
+        if (data.raw_csv_text) {
+            SERVERLESS_DATA_CACHE.csv_data = data.raw_csv_text;
+            SERVERLESS_DATA_CACHE.filename = data.filename;
+            SERVERLESS_DATA_CACHE.encoding = data.encoding;
+            SERVERLESS_DATA_CACHE.skipped_rows = data.skipped_rows;
+            console.log("[SERVERLESS] 클라이언트 측 데이터 캐시 확보 완료");
+        }
+
         // UI 메타데이터 업데이트
         document.getElementById("metaFileName").textContent = `${data.filename} (${formatBytes(data.file_size)})`;
         document.getElementById("metaEncoding").textContent = `${data.encoding} (상단 ${data.skipped_rows}줄 스킵)`;
@@ -251,7 +339,11 @@ async function requestSuggest() {
     console.log("[SUGGEST] 제안 요청 시작");
 
     try {
-        const res = await fetch("/suggest", { method: "POST" });
+        const res = await fetch("/suggest", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...SERVERLESS_DATA_CACHE })
+        });
         const data = await res.json();
 
         if (!res.ok) {
@@ -324,7 +416,7 @@ async function executeTool(tool, params) {
         const res = await fetch("/run", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ tool: tool, params: params })
+            body: JSON.stringify({ tool: tool, params: params, ...SERVERLESS_DATA_CACHE })
         });
 
         const data = await res.json();
@@ -383,7 +475,7 @@ async function requestNaturalQuery(promptText) {
         const res = await fetch("/query", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt: promptText })
+            body: JSON.stringify({ prompt: promptText, ...SERVERLESS_DATA_CACHE })
         });
 
         const data = await res.json();
@@ -525,7 +617,7 @@ async function requestExplain(mode) {
         const res = await fetch("/explain", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ mode: mode })
+            body: JSON.stringify({ mode: mode, ...SERVERLESS_DATA_CACHE })
         });
 
         const data = await res.json();
@@ -587,7 +679,7 @@ async function requestAsk(questionText) {
         const res = await fetch("/ask", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ question: questionText })
+            body: JSON.stringify({ question: questionText, ...SERVERLESS_DATA_CACHE })
         });
 
         const data = await res.json();

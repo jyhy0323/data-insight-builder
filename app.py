@@ -6,7 +6,7 @@ import os
 import logging
 import pandas as pd
 import numpy as np
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, session
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
@@ -26,6 +26,10 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.json.ensure_ascii = False  # 한글 깨짐 방지
+app.secret_key = os.getenv("SECRET_KEY", "ai-data-insight-secret-key-2026")
+
+# 비밀번호 설정 (미설정 시 비활성화)
+APP_PASSWORD = os.getenv("APP_PASSWORD", "1234").strip()
 
 # 업로드 최대 용량 설정
 max_mb = int(os.getenv("MAX_UPLOAD_MB", 10))
@@ -33,6 +37,49 @@ app.config["MAX_CONTENT_LENGTH"] = max_mb * 1024 * 1024
 
 # 메모리에 보관할 단일 데이터셋 저장소 (디스크 영구 저장 금지 규칙)
 CURRENT_DATASET = {}
+
+def check_auth():
+    """비밀번호가 설정되어 있을 경우 세션 또는 헤더의 인증 상태 검증"""
+    if not APP_PASSWORD:
+        return True
+    if session.get("is_authenticated"):
+        return True
+    header_pwd = request.headers.get("X-App-Password")
+    if header_pwd and header_pwd == APP_PASSWORD:
+        session["is_authenticated"] = True
+        return True
+    return False
+
+def ensure_dataset_ready(req_data=None):
+    """
+    Vercel Serverless 인스턴스 자동 복구 헬퍼:
+    서버리스 특성으로 CURRENT_DATASET의 메모리가 비어있더라도,
+    클라이언트가 전송한 csv_data와 메타정보가 있으면 즉시 메모리에 복원합니다.
+    """
+    global CURRENT_DATASET
+    if "df" in CURRENT_DATASET:
+        return True
+    
+    if req_data and req_data.get("csv_data"):
+        try:
+            csv_text = req_data["csv_data"]
+            skipped_rows = int(req_data.get("skipped_rows", 0))
+            df = pd.read_csv(io.StringIO(csv_text), skiprows=skipped_rows)
+            diag = diagnose_dataframe(df)
+            CURRENT_DATASET = {
+                "filename": req_data.get("filename", "uploaded_data.csv"),
+                "file_size": len(csv_text.encode("utf-8")),
+                "encoding": req_data.get("encoding", "utf-8"),
+                "skipped_rows": skipped_rows,
+                "df": df,
+                "diagnostics": diag
+            }
+            logger.info("[SERVERLESS] Vercel 서버리스 인스턴스: 클라이언트 데이터로부터 메모리 즉시 자동 복원 완료")
+            return True
+        except Exception as e:
+            logger.error(f"[SERVERLESS ERROR] 데이터 자동 복원 실패: {str(e)}")
+            return False
+    return False
 
 # 집계 행 식별용 키워드
 AGGREGATE_KEYWORDS = [
@@ -232,9 +279,47 @@ def health():
         "model": os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
     })
 
+@app.route("/api/auth/status", methods=["GET"])
+def auth_status():
+    """비밀번호 설정 여부 및 현재 세션 인증 상태 확인"""
+    is_required = bool(APP_PASSWORD)
+    is_authed = session.get("is_authenticated", False) if is_required else True
+    return jsonify({
+        "required": is_required,
+        "authenticated": is_authed
+    })
+
+@app.route("/api/auth/login", methods=["POST"])
+def auth_login():
+    """비밀번호 검증 및 세션 인증 부여"""
+    if not APP_PASSWORD:
+        session["is_authenticated"] = True
+        return jsonify({"status": "success", "message": "비밀번호가 설정되어 있지 않습니다."})
+
+    req_data = request.get_json(silent=True) or {}
+    input_pwd = str(req_data.get("password", "")).strip()
+
+    if input_pwd == APP_PASSWORD:
+        session["is_authenticated"] = True
+        logger.info("[AUTH] 비밀번호 인증 성공")
+        return jsonify({"status": "success", "message": "인증되었습니다."})
+    else:
+        logger.warning(f"[AUTH] 비밀번호 불일치 (입력: {input_pwd[:2]}***)")
+        return jsonify({"error": "비밀번호가 올바르지 않습니다."}), 401
+
+@app.route("/api/auth/logout", methods=["POST"])
+def auth_logout():
+    """로그아웃"""
+    session.pop("is_authenticated", None)
+    logger.info("[AUTH] 로그아웃 완료")
+    return jsonify({"status": "success", "message": "로그아웃되었습니다."})
+
 @app.route("/inspect", methods=["POST"])
 def inspect_file():
     logger.info("[REQUEST] POST /inspect")
+
+    if not check_auth():
+        return jsonify({"error": "비밀번호 인증이 필요합니다. 먼저 비밀번호를 입력해 주세요."}), 401
 
     if "file" not in request.files:
         logger.warning("[ERROR] 파일 미선택")
@@ -289,12 +374,19 @@ def inspect_file():
         "encoding": detected_encoding,
         "skipped_rows": skip_rows,
         "diagnostics": diagnostics,
+        "raw_csv_text": text_content,
         "memory_notice": "파일은 서버 메모리에만 임시 보관되며, 서버를 재시작하면 초기화됩니다."
     })
 
 @app.route("/suggest", methods=["POST"])
 def suggest_analyses():
     logger.info("[REQUEST] POST /suggest")
+
+    if not check_auth():
+        return jsonify({"error": "비밀번호 인증이 필요합니다. 먼저 비밀번호를 입력해 주세요."}), 401
+
+    req_data = request.get_json(silent=True) or {}
+    ensure_dataset_ready(req_data)
 
     if "df" not in CURRENT_DATASET or "diagnostics" not in CURRENT_DATASET:
         logger.warning("[ERROR] 진단 데이터 없음 (/inspect 미실행)")
@@ -395,11 +487,16 @@ def suggest_analyses():
 def run_tool():
     logger.info("[REQUEST] POST /run")
 
+    if not check_auth():
+        return jsonify({"error": "비밀번호 인증이 필요합니다. 먼저 비밀번호를 입력해 주세요."}), 401
+
+    req_data = request.get_json(silent=True) or {}
+    ensure_dataset_ready(req_data)
+
     if "df" not in CURRENT_DATASET:
         logger.warning("[ERROR] 데이터셋 부재 (/run 호출 실패)")
         return jsonify({"error": "분석할 데이터가 메모리에 없습니다. 먼저 CSV 파일을 업로드해 주세요."}), 400
 
-    req_data = request.get_json(silent=True) or {}
     tool_name = req_data.get("tool")
     params = req_data.get("params") or {}
 
@@ -443,11 +540,16 @@ def explain_result():
     """
     logger.info("[REQUEST] POST /explain")
 
+    if not check_auth():
+        return jsonify({"error": "비밀번호 인증이 필요합니다. 먼저 비밀번호를 입력해 주세요."}), 401
+
+    req_data = request.get_json(silent=True) or {}
+    ensure_dataset_ready(req_data)
+
     if "df" not in CURRENT_DATASET:
         logger.warning("[ERROR] 데이터셋 부재 (/explain 호출 실패)")
         return jsonify({"error": "분석할 데이터가 메모리에 없습니다. 먼저 CSV 파일을 업로드해 주세요."}), 400
 
-    req_data = request.get_json(silent=True) or {}
     mode = req_data.get("mode", "B").upper()
 
     api_key = os.getenv("GEMINI_API_KEY", "")
@@ -601,10 +703,15 @@ def query_analysis_by_text():
     """
     logger.info("[REQUEST] POST /query")
 
+    if not check_auth():
+        return jsonify({"error": "비밀번호 인증이 필요합니다. 먼저 비밀번호를 입력해 주세요."}), 401
+
+    req_data = request.get_json(silent=True) or {}
+    ensure_dataset_ready(req_data)
+
     if "df" not in CURRENT_DATASET:
         return jsonify({"error": "분석할 데이터가 메모리에 없습니다. 먼저 CSV 파일을 업로드해 주세요."}), 400
 
-    req_data = request.get_json(silent=True) or {}
     user_prompt = req_data.get("prompt", "").strip()
 
     if not user_prompt:
@@ -729,6 +836,12 @@ def ask_question():
     """
     logger.info("[REQUEST] POST /ask")
 
+    if not check_auth():
+        return jsonify({"error": "비밀번호 인증이 필요합니다. 먼저 비밀번호를 입력해 주세요."}), 401
+
+    req_data = request.get_json(silent=True) or {}
+    ensure_dataset_ready(req_data)
+
     if "df" not in CURRENT_DATASET:
         return jsonify({"error": "분석할 데이터가 메모리에 없습니다. 먼저 CSV 파일을 업로드해 주세요."}), 400
 
@@ -736,7 +849,6 @@ def ask_question():
     if not last_run:
         return jsonify({"error": "먼저 분석 도구를 실행(/run)하여 계산 결과를 만들어 주세요."}), 400
 
-    req_data = request.get_json(silent=True) or {}
     user_question = req_data.get("question", "").strip()
 
     if not user_question:

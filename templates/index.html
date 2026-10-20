@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Data Insight Builder</title>
+    <!-- PWA 지원 메타 태그 & 매니페스트 -->
+    <link rel="manifest" href="/static/manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DataInsight">
+    <link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+    
     <link rel="stylesheet" href="/static/style.css">
     <!-- Chart.js CDN (차트 시각화) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -11,6 +19,22 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
+    <!-- 비밀번호 잠금 모달 오버레이 -->
+    <div id="authModalOverlay" class="auth-modal-overlay hidden">
+        <div class="auth-modal-card">
+            <div class="auth-icon">🔐</div>
+            <h2>AI Data Insight Builder</h2>
+            <p class="auth-subtitle">보안을 위해 서비스 접속 비밀번호를 입력해 주세요.</p>
+            <form id="authForm" class="auth-form">
+                <div class="auth-input-group">
+                    <input type="password" id="authPasswordInput" class="auth-input" placeholder="비밀번호 입력" autofocus autocomplete="current-password">
+                    <button type="submit" id="authSubmitBtn" class="btn btn-primary auth-submit-btn">접속하기</button>
+                </div>
+                <div id="authErrorMsg" class="auth-error-msg hidden">비밀번호가 올바르지 않습니다. 다시 입력해 주세요.</div>
+            </form>
+        </div>
+    </div>
+
     <header class="app-header">
         <div class="header-content">
             <h1>📊 AI Data Insight Builder</h1>
@@ -19,6 +43,7 @@
         <div class="server-status-bar">
             <span id="healthBadge" class="badge badge-loading">서버 확인 중...</span>
             <span id="modelBadge" class="badge badge-info">Model: ...</span>
+            <button id="logoutBtn" class="btn-lock hidden" title="앱 잠금/로그아웃">🔒 잠금</button>
         </div>
     </header>
 
@@ -266,5 +291,15 @@
 
     <!-- 프론트엔드 제어 스크립트 -->
     <script src="/static/app.js"></script>
+    <!-- PWA Service Worker 등록 스크립트 -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/static/service-worker.js')
+                    .then(reg => console.log('[PWA] Service Worker 등록 완료 scope:', reg.scope))
+                    .catch(err => console.log('[PWA] Service Worker 등록 실패:', err));
+            });
+        }
+    </script>
 </body>
 </html>
